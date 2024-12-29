@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net data: blob:;" />
+    <title>XML Editor</title>
+    <script>
+      // Check if preload API is available
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log(' [Renderer] DOM Content Loaded');
+        if (window.electron) {
+          console.log(' [Renderer] Preload API available');
+        } else {
+          console.error(' [Renderer] Preload API not available');
+        }
+      });
+    </script>
+  </head>
+  <body class="h-full">
+    <div id="root" class="h-full"></div>
+    <script type="module" src="/src/renderer/index.tsx"></script>
+  </body>
+</html>

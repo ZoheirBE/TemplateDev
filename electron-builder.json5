@@ -1,0 +1,20 @@
+{
+  "appId": "com.xml-editor.app",
+  "productName": "XML Editor",
+  "directories": {
+    "output": "dist/electron"
+  },
+  "files": [
+    "dist/renderer/**/*",
+    "dist/main/**/*"
+  ],
+  "win": {
+    "target": ["nsis"],
+    "icon": "resources/icon.ico"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true
+  }
+}

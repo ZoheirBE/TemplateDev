@@ -1,0 +1,1 @@
+{"version":3,"file":"ipc.js","sourceRoot":"","sources":["../../../src/shared/ipc.ts"],"names":[],"mappings":";;;AAAA,oBAAoB;AACP,QAAA,YAAY,GAAG;IAC1B,IAAI,EAAE;QACJ,IAAI,EAAE,WAAW;QACjB,IAAI,EAAE,WAAW;QACjB,KAAK,EAAE,YAAY;KACpB;CACO,CAAC;AAgBX,sEAAsE;AACtE,kBAAe;IACb,YAAY,EAAZ,oBAAY;CACb,CAAC"}

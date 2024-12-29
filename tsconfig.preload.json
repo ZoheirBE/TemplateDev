@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "outDir": "dist-electron/preload",
+    "strict": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "shared/*": ["src/shared/*"]
+    },
+    "allowJs": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/preload/**/*", "src/shared/**/*"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
