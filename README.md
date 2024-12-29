@@ -30,13 +30,16 @@ A modern, web-based XML editor specifically designed for SWIFT message XML files
 - Avoid enums; use const objects with 'as const' assertion
 - Use functional components with TypeScript interfaces
 - Define strict types for message passing between different parts of the extension
-- Use absolute imports for all files @/...
+- Use path aliases for imports: `@/*` for src directory and `shared/*` for shared directory
 - Avoid try/catch blocks unless there's good reason to translate or handle error in that abstraction
 - Use explicit return types for all functions
 
 ## State Management
-- Use React Context for global state when needed
-- Implement proper cleanup in useEffect hooks
+- Use React Context with TypeScript for type-safe state management
+- Implement reducer pattern with discriminated union action types
+- Maintain editor state with `EditorProvider` and `useEditor` hook
+- Use singleton services for cross-component state (e.g., `SyncService`, `FileWatcherService`)
+- Implement proper cleanup in useEffect hooks with return functions
 
 ## Syntax and Formatting
 - Use "function" keyword for pure functions
@@ -64,33 +67,36 @@ A modern, web-based XML editor specifically designed for SWIFT message XML files
 
 ```
 src/
-├── resources/                      # XSD and resource files
+├── lib/                           # Library utilities and helpers
 ├── main/                          # Electron main process
 │   ├── index.ts                   # Main entry point
-│   ├── services/
-│   │   ├── fileSystem.ts          # File operations and management
-│   │   └── ipc.ts                 # Inter-process communication handlers
-│   └── window.ts                  # Window management and configuration
-├── renderer/                      # Frontend application
-│   ├── App.tsx                    # Root React component
-│   ├── index.tsx                  # Renderer entry point
+│   ├── ipcHandlers.ts            # IPC communication setup
+│   ├── menu.ts                   # Application menu configuration
+│   └── services/                 # Main process services
+│       ├── ipc.ts               # IPC service implementation
+├── preload/                      # Preload scripts for IPC bridge
+├── renderer/                     # Frontend application
+│   ├── App.tsx                   # Root React component
+│   ├── index.tsx                 # Renderer entry point
 │   ├── components/
-│   │   ├── Editor/               # Core editing functionality
-│   │   │   ├── MonacoEditor      # Monaco editor integration
-│   │   │   ├── validation        # XML validation engine
-│   │   │   └── schema           # XSD schema handling
-│   │   ├── Layout/               # Application layout components
-│   │   │   ├── ThreePanel        # Main three-panel layout
-│   │   │   ├── Explorer          # File system explorer
-│   │   │   └── Properties        # XML properties panel
-│   │   ├── Toolbar/              # Application toolbar
-│   │   └── StatusBar/            # Status information display
-│   ├── services/                 # Frontend services
-│   │   ├── errorHandling        # Error management
-│   │   ├── state                # Global state management
-│   │   └── editorService        # Editor state and operations
-│   └── styles/                   # Theme and styling
-└── shared/                       # Shared utilities and types
+│   │   ├── Layout/              # Core layout components
+│   │   │   ├── ThreePanel       # Main three-panel layout
+│   │   │   ├── Explorer         # File system explorer
+│   │   │   └── Properties       # XML properties panel
+│   │   ├── Toolbar/            # Application toolbar
+│   │   └── ui/                 # Shared UI components
+│   ├── services/               # Frontend services
+│   │   ├── editorService      # Editor state management
+│   │   ├── errorService       # Error handling
+│   │   ├── fileWatcherService # File system watching
+│   │   ├── ipcService         # IPC communication
+│   │   ├── schemaService      # XML schema handling
+│   │   └── syncService        # File synchronization
+│   └── types/                 # TypeScript type definitions
+├── resources/                  # Static resources
+├── services/                  # Shared services
+├── shared/                    # Shared utilities and types
+└── types/                    # Global type definitions
 ```
 
 ## Architecture
@@ -98,38 +104,55 @@ src/
 The application follows a modular architecture with clear separation of concerns:
 
 ### Main Process (Electron)
-- Handles file system operations
-- Manages application windows
-- Coordinates IPC communication
+- Handles file system operations and window management
+- Implements IPC communication handlers
+- Manages application menu and system integration
+- Provides secure preload scripts for renderer process
 
 ### Renderer Process (React)
-- Implements the user interface
-- Manages editor state
-- Handles XML validation
-- Provides real-time feedback
+- Implements modern React components with TypeScript
+- Uses service-based architecture for core functionality
+- Manages file synchronization and watching
+- Provides real-time XML validation
 
-### Core Components
+### Core Services
 
 #### Editor Service
-- Manages Monaco Editor instance
-- Handles XML parsing and formatting
-- Coordinates with validation service
+- Manages editor state and operations
+- Handles file content synchronization
+- Coordinates with Monaco Editor instance
 
 #### Schema Service
-- XSD schema loading and parsing
-- Real-time validation
-- Error reporting
+- Manages XML schema loading and caching
+- Provides schema validation
+- Handles documentation parsing
+
+#### Sync Service
+- Manages file synchronization
+- Handles file change notifications
+- Coordinates with file watcher service
 
 #### IPC Service
-- Manages communication between main and renderer processes
+- Provides type-safe IPC communication
 - Handles file operations
-- Coordinates system events
+- Manages error handling and responses
+
+#### File Watcher Service
+- Monitors file system changes
+- Provides real-time file updates
+- Manages file watching lifecycle
+
+#### Error Service
+- Centralizes error handling
+- Provides user-friendly error messages
+- Manages error logging and reporting
 
 ## Development
 
 ### Prerequisites
 - Node.js (v18+)
 - npm or yarn
+- Windows, macOS, or Linux operating system
 
 ### Setup
 ```bash
@@ -144,9 +167,10 @@ npm run build
 ```
 
 ### Tech Stack
+- Electron
 - React
 - TypeScript
-- Electron
 - Monaco Editor
 - Tailwind CSS
 - Shadcn UI
+- Radix UI
