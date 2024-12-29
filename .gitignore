@@ -1,5 +1,5 @@
 src/resources/
-node_modules/
+node_modules/*
 dist/
 out/
 .DS_Store
@@ -15,5 +15,5 @@ release/
 !/package.json
 !/package-lock.json
 !/yarn.lock
-node_modules/**/package.json
-node_modules/**/package-lock.json
+!node_modules/package.json
+!node_modules/.package-lock.json
